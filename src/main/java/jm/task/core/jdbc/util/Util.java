@@ -6,17 +6,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
-    static String host = "localhost";
-    static int port = 3306;
-    static String dbname = "test_db";
-    static String user = "root";
-    static String pwd = "12345";
 
     public static Connection connect() {
+
+        String host = "localhost";
+        int port = 3306;
+        String dbname = "test_db";
+        String user = "root";
+        String pwd = "12345";
+
         String url = String.format("jdbc:mysql://%s:%d/%s", host, port, dbname);
         try {
-            Connection connection = DriverManager.getConnection(url, user, pwd);
-            return connection;
+            return DriverManager.getConnection(url, user, pwd);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

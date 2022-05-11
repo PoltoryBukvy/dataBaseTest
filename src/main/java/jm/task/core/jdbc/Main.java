@@ -14,11 +14,12 @@ public class Main {
         UserDaoJDBCImpl userDao = new UserDaoJDBCImpl();
         //userDao.dropUsersTable();
         //userDao.createUsersTable();
+        //userDao.createUsersTable();
         //userDao.saveUser("Toma", "Ustyan", (byte) 27);
         //userDao.saveUser("Alina", "Lisova", (byte) 26);
         //List<User> list = userDao.getAllUsers();
         //for (User user : list) {
-            //System.out.println(user);
+          //  System.out.println(user);
         //}
         //userDao.removeUserById(1);
         userDao.cleanUsersTable();
