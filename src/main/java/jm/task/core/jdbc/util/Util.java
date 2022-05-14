@@ -1,5 +1,11 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
 import java.sql.Connection;
 
 import java.sql.DriverManager;
@@ -7,15 +13,16 @@ import java.sql.SQLException;
 
 public class Util {
 
+    private static String host = "localhost";
+    private static int port = 3306;
+    private static String dbname = "test_db";
+    private static String user = "root";
+    private static String pwd = "12345";
+    private static String url = String.format("jdbc:mysql://%s:%d/%s", host, port, dbname);
+
     public static Connection connect() {
 
-        String host = "localhost";
-        int port = 3306;
-        String dbname = "test_db";
-        String user = "root";
-        String pwd = "12345";
 
-        String url = String.format("jdbc:mysql://%s:%d/%s", host, port, dbname);
         try {
             return DriverManager.getConnection(url, user, pwd);
         } catch (SQLException e) {
@@ -23,4 +30,20 @@ public class Util {
             return null;
         }
     }
+
+    public static SessionFactory initHibernate() {
+        Configuration configuration = new Configuration().addAnnotatedClass(User.class)
+                .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+                .setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
+                .setProperty("hibernate.connection.url", url)
+                .setProperty("hibernate.connection.username", user)
+                .setProperty("hibernate.connection.password", pwd);
+
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties())
+                .build();
+
+        return configuration.buildSessionFactory(serviceRegistry);
+    }
+
 }
