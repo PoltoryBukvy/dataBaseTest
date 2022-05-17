@@ -13,16 +13,17 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoHibernateImpl implements UserDao {
+public class UserDaoHibernateImpl implements UserDao, AutoCloseable {
+
+    private final SessionFactory sessionFactory = Util.initHibernate();
+
     public UserDaoHibernateImpl() {
 
     }
 
-
     @Override
     public void createUsersTable() {
-        try(SessionFactory sf = Util.initHibernate();
-            Session session = sf.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS USER " +
                     "(id BIGINT not NULL AUTO_INCREMENT, " +
@@ -37,8 +38,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        try(SessionFactory sf = Util.initHibernate();
-            Session session = sf.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.createSQLQuery("DROP TABLE IF EXISTS USER").executeUpdate();
             session.getTransaction().commit();
@@ -47,8 +47,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        try(SessionFactory sf = Util.initHibernate();
-            Session session = sf.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.save(new User(name, lastName, age));
             session.getTransaction().commit();
@@ -57,8 +56,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        try(SessionFactory sf = Util.initHibernate();
-            Session session = sf.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = new User();
             user.setId(id);
@@ -70,8 +68,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> users;
-        try(SessionFactory sf = Util.initHibernate();
-            Session session = sf.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<User> criteria = builder.createQuery(User.class);
             criteria.from(User.class);
@@ -82,11 +79,15 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try(SessionFactory sf = Util.initHibernate();
-            Session session = sf.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.createSQLQuery("TRUNCATE TABLE USER").executeUpdate();
             session.getTransaction().commit();
         }
+    }
+
+    @Override
+    public void close() {
+        sessionFactory.close();
     }
 }

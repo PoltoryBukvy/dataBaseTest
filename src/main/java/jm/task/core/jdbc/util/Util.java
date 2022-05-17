@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 public class Util {
 
+    private Util instants;
     private static String host = "localhost";
     private static int port = 3306;
     private static String dbname = "test_db";
@@ -20,9 +21,16 @@ public class Util {
     private static String pwd = "12345";
     private static String url = String.format("jdbc:mysql://%s:%d/%s", host, port, dbname);
 
+    private Util() { }
+
+    public Util getInstants() {
+        if (instants == null) {
+            instants = new Util();
+        }
+        return instants;
+    }
+
     public static Connection connect() {
-
-
         try {
             return DriverManager.getConnection(url, user, pwd);
         } catch (SQLException e) {
