@@ -5,15 +5,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
 
-    private Util instants;
+    private static SessionFactory instance;
+
     private static String host = "localhost";
     private static int port = 3306;
     private static String dbname = "test_db";
@@ -23,11 +22,11 @@ public class Util {
 
     private Util() { }
 
-    public Util getInstants() {
-        if (instants == null) {
-            instants = new Util();
+    public static SessionFactory getInstance() {
+        if (instance == null) {
+            instance = initHibernate();
         }
-        return instants;
+        return instance;
     }
 
     public static Connection connect() {

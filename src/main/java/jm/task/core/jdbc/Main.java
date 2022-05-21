@@ -21,12 +21,14 @@ public class Main {
         //userDaoJDBC.getAllUsers();
         //userDaoJDBC.removeUserById(1);
         //userDaoJDBC.dropUsersTable();
-        UserDaoHibernateImpl userDaoHibernate = new UserDaoHibernateImpl();
-        userDaoHibernate.createUsersTable();
-        userDaoHibernate.saveUser("Yasha", "Kotik", (byte) 8);
-        userDaoHibernate.saveUser("Marusya", "Kisa", (byte) 6);
-        userDaoHibernate.getAllUsers();
-        userDaoHibernate.close();
+        //UserDaoHibernateImpl userDaoHibernate = new UserDaoHibernateImpl();
+        //userDaoHibernate.createUsersTable();
+        //userDaoHibernate.saveUser("Yasha", "Kotik", (byte) 8);
+        //userDaoHibernate.saveUser("Marusya", "Kisa", (byte) 6);
+        //userDaoHibernate.getAllUsers();
+        //userDaoHibernate.close();
         //userDaoHibernate.removeUserById(1);
     }
 }
+
+

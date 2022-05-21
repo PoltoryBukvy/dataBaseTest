@@ -13,13 +13,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoHibernateImpl implements UserDao, AutoCloseable {
+public class UserDaoHibernateImpl implements UserDao {
 
-    private final SessionFactory sessionFactory = Util.initHibernate();
+    private final SessionFactory sessionFactory = Util.getInstance();
 
-    public UserDaoHibernateImpl() {
-
-    }
+    public UserDaoHibernateImpl() {}
 
     @Override
     public void createUsersTable() {
@@ -42,6 +40,8 @@ public class UserDaoHibernateImpl implements UserDao, AutoCloseable {
             session.beginTransaction();
             session.createSQLQuery("DROP TABLE IF EXISTS USER").executeUpdate();
             session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -51,6 +51,8 @@ public class UserDaoHibernateImpl implements UserDao, AutoCloseable {
             session.beginTransaction();
             session.save(new User(name, lastName, age));
             session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -62,19 +64,22 @@ public class UserDaoHibernateImpl implements UserDao, AutoCloseable {
             user.setId(id);
             session.remove(user);
             session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users;
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<User> criteria = builder.createQuery(User.class);
             criteria.from(User.class);
-            users = session.createQuery(criteria).getResultList();
+            return session.createQuery(criteria).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return users;
     }
 
     @Override
@@ -83,11 +88,8 @@ public class UserDaoHibernateImpl implements UserDao, AutoCloseable {
             session.beginTransaction();
             session.createSQLQuery("TRUNCATE TABLE USER").executeUpdate();
             session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-
-    @Override
-    public void close() {
-        sessionFactory.close();
     }
 }
