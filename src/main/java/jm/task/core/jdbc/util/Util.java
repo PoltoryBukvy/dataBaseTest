@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class Util {
 
-    private static SessionFactory instance;
+    private static Util instance;
 
     private static String host = "localhost";
     private static int port = 3306;
@@ -22,9 +22,9 @@ public class Util {
 
     private Util() { }
 
-    public static SessionFactory getInstance() {
+    public static Util getInstance() {
         if (instance == null) {
-            instance = initHibernate();
+            instance = new Util();
         }
         return instance;
     }
@@ -38,7 +38,7 @@ public class Util {
         }
     }
 
-    public static SessionFactory initHibernate() {
+    public static SessionFactory getSessionFactory() {
         Configuration configuration = new Configuration().addAnnotatedClass(User.class)
                 .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
                 .setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver")
